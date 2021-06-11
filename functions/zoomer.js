@@ -11,12 +11,12 @@ const zoomClient = got.extend({
   },
 })
 
-exports.handler = function scheduleMeeting(topic, startTime, duration) {
+function scheduleMeeting(topic, startTime, duration) {
   return zoomClient
     .post(`users/${ZOOM_ADMIN_ID}/meetings`, {
       json: {
         topic,
-        start_time: startTime.toISOString(),
+        start_time: startTime,
         duration,
         settings: {
           join_before_host: true,
@@ -26,4 +26,12 @@ exports.handler = function scheduleMeeting(topic, startTime, duration) {
       },
     })
     .json()
+}
+
+exports.handler = async function (event) {
+  const { topic, startTime, duration } = JSON.parse(event.body)
+  return {
+    statusCode: 200,
+    body: JSON.stringify(await scheduleMeeting(topic, startTime, duration)),
+  }
 }
