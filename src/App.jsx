@@ -6,7 +6,6 @@ function App() {
 
   async function handleClick() {
     const today = new Date()
-    console.log({today})
     const response = await fetch('/.netlify/functions/zoomer', {
       method: 'POST',
       body: JSON.stringify({
